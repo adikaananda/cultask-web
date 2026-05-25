@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CULTASK — Belajar Langkah, Capai Tujuan, Siap Bekerja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── TOKENS ──────────────────────────────────────────────────────────── */
+    :root {
+      --primary:        #6A4BC3;
+      --primary-mid:    #8B6BE3;
+      --primary-light:  #B59AF4;
+      --primary-surface:#F3F0FF;
+      --primary-border: #E8E3FF;
+      --gold:           #FFC94D;
+      --gold-light:     #FFF2CC;
+      --gold-dark:      #E6A800;
+      --dark:           #1E1E2F;
+      --mid:            #6B6B8A;
+      --muted:          #B0AECF;
+      --surface:        #F8F7FF;
+      --white:          #FFFFFF;
+      --card-shadow:    0 4px 24px rgba(106,75,195,0.10);
+      --nav-h:          72px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--dark);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
+
+    /* ─── NAV ─────────────────────────────────────────────────────────────── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      height: var(--nav-h);
+      background: rgba(248,247,255,0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--primary-border);
+      transition: box-shadow .3s;
+    }
+    header.scrolled { box-shadow: 0 8px 40px rgba(106,75,195,0.12); }
+
+    .nav-inner {
+      height: var(--nav-h);
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+
+    /* Logo */
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-mark {
+      display: flex; align-items: center; gap: 2px;
+      font-family: 'Sora', sans-serif; font-size: 1.45rem; font-weight: 800; letter-spacing: -0.5px;
+    }
+    .logo-mark .cul { color: var(--primary); }
+    .logo-mark .task {
+      background: var(--gold);
+      color: var(--dark);
+      padding: 2px 8px;
+      border-radius: 8px;
+    }
+    .logo-sub { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; display: block; margin-top: 1px; }
+
+    /* Desktop Nav */
+    .nav-links { display: flex; align-items: center; gap: 2px; }
+    .nav-links a {
+      font-size: 0.88rem; font-weight: 500; color: var(--mid);
+      padding: 7px 16px; border-radius: 50px; text-decoration: none;
+      border: 1.5px solid transparent; transition: all .2s;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--primary); background: var(--primary-surface); border-color: var(--primary-border);
+    }
+    .nav-cta {
+      background: var(--primary) !important; color: var(--white) !important;
+      border-color: var(--primary) !important; font-weight: 700 !important;
+      padding: 8px 20px !important;
+    }
+    .nav-cta:hover { background: var(--primary-mid) !important; border-color: var(--primary-mid) !important; }
+
+    /* Hamburger */
+    .nav-toggle {
+      display: none; flex-direction: column; gap: 5px;
+      width: 40px; height: 40px; background: var(--primary-surface);
+      border: 1.5px solid var(--primary-border); border-radius: 10px;
+      cursor: pointer; padding: 9px; transition: background .2s;
+    }
+    .nav-toggle:hover { background: var(--primary-border); }
+    .nav-toggle span {
+      display: block; height: 2px; background: var(--primary);
+      border-radius: 2px; transition: all .3s; transform-origin: center;
+    }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile drawer */
+    .nav-mobile {
+      display: none; flex-direction: column; gap: 4px;
+      position: fixed; top: var(--nav-h); left: 0; right: 0;
+      background: var(--white); padding: 16px 20px 24px;
+      border-bottom: 1px solid var(--primary-border);
+      box-shadow: 0 16px 48px rgba(106,75,195,0.14);
+      transform: translateY(-110%); transition: transform .35s cubic-bezier(.4,0,.2,1);
+      z-index: 99;
+    }
+    .nav-mobile.open { transform: translateY(0); }
+    .nav-mobile a {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--dark); text-decoration: none; font-size: 0.95rem; font-weight: 500;
+      padding: 12px 16px; border-radius: 12px; border: 1px solid transparent; transition: all .2s;
+    }
+    .nav-mobile a:hover { background: var(--primary-surface); border-color: var(--primary-border); color: var(--primary); }
+    .nav-mobile a.cta-mob {
+      background: var(--primary); color: var(--white); font-weight: 700; margin-top: 6px;
+      justify-content: center; border-color: var(--primary);
+    }
+    .nav-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(30,30,47,.35); z-index: 98; opacity: 0; transition: opacity .3s;
+    }
+    .nav-overlay.open { opacity: 1; }
+
+    /* ─── HERO ─────────────────────────────────────────────────────────────── */
+    .hero {
+      min-height: calc(100vh - var(--nav-h));
+      display: flex; align-items: center;
+      padding: 80px 0 100px;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 70% 40%, rgba(181,154,244,.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 10% 80%, rgba(255,201,77,.12) 0%, transparent 60%);
+    }
+    .hero img{
+        width: 300px;
+    }
+    /* grid texture */
+    .hero-bg::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(106,75,195,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(106,75,195,.055) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    /* floating blob */
+    .hero-blob {
+      position: absolute; top: -80px; right: -120px;
+      width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(139,107,227,.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative; z-index: 2;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    }
+
+    .hero-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--gold-light); border: 1.5px solid var(--gold);
+      color: var(--dark); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 50px; margin-bottom: 22px;
+    }
+    .hero-label .dot { width: 7px; height: 7px; background: var(--gold-dark); border-radius: 50%; }
+
+    .hero-headline {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+      font-weight: 800; line-height: 1.13; letter-spacing: -1.5px;
+      color: var(--dark); margin-bottom: 22px;
+    }
+    .hero-headline .accent { color: var(--primary); position: relative; }
+    .hero-headline .accent::after {
+      content: '';
+      position: absolute; bottom: 4px; left: 0; right: 0; height: 8px;
+      background: var(--gold); opacity: .35; border-radius: 4px; z-index: -1;
+    }
+
+    .hero-body { font-size: 1.06rem; color: var(--mid); max-width: 480px; margin-bottom: 36px; line-height: 1.75; }
+
+    .hero-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--primary); color: var(--white);
+      font-size: 0.95rem; font-weight: 700; padding: 13px 26px;
+      border-radius: 50px; text-decoration: none;
+      box-shadow: 0 8px 28px rgba(106,75,195,.32); transition: all .25s;
+    }
+    .btn-primary:hover { background: var(--primary-mid); transform: translateY(-2px); box-shadow: 0 12px 36px rgba(106,75,195,.40); }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--white); color: var(--primary);
+      font-size: 0.95rem; font-weight: 700; padding: 12px 24px;
+      border-radius: 50px; text-decoration: none;
+      border: 2px solid var(--primary-light); transition: all .25s;
+    }
+    .btn-outline:hover { background: var(--primary-surface); border-color: var(--primary); }
+
+    /* Hero visual — phone mockup container */
+    .hero-visual {
+      display: flex; justify-content: center; align-items: center; position: relative;
+    }
+   
+   
+    .pc-label { font-size: 0.65rem; color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: .06em; }
+    .pc-val { font-size: 0.85rem; font-weight: 700; color: var(--white); margin-top: 2px; }
+    .pc-bar { height: 4px; background: rgba(255,255,255,.18); border-radius: 99px; margin-top: 6px; overflow: hidden; }
+    .pc-fill { height: 100%; border-radius: 99px; background: var(--gold); }
+
+    .phone-badge {
+      position: absolute; top: 20px; right: 40px;
+      background: var(--gold); color: var(--dark);
+      font-size: 0.72rem; font-weight: 800; padding: 6px 14px;
+      border-radius: 50px; box-shadow: 0 4px 16px rgba(255,201,77,.4);
+      white-space: nowrap;
+    }
+    .phone-badge-2 {
+      position: absolute; bottom: 20px; left: 14px;
+      background: var(--white); color: var(--primary);
+      font-size: 0.72rem; font-weight: 700; padding: 8px 14px;
+      border-radius: 50px; box-shadow: 0 6px 24px rgba(106,75,195,.18);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .pb-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; }
+
+    /* ─── STATS BAR ─────────────────────────────────────────────────────────── */
+    .stats-bar {
+      background: var(--white);
+      border-top: 1px solid var(--primary-border); border-bottom: 1px solid var(--primary-border);
+      padding: 32px 0;
+    }
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    }
+    .stat-item {
+      text-align: center; padding: 0 24px;
+      border-right: 1px solid var(--primary-border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Sora', sans-serif; font-size: 2.2rem; font-weight: 800; color: var(--primary);
+      letter-spacing: -1px; line-height: 1;
+    }
+    .stat-label { font-size: 0.82rem; color: var(--mid); margin-top: 5px; font-weight: 500; }
+
+    /* ─── SECTION BASE ──────────────────────────────────────────────────────── */
+    section { padding: 96px 0; }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--primary); background: var(--primary-surface);
+      border: 1.5px solid var(--primary-border); padding: 5px 14px; border-radius: 50px;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Sora', sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 800; color: var(--dark); letter-spacing: -0.8px; line-height: 1.2; margin-bottom: 14px;
+    }
+    .section-body { font-size: 1.02rem; color: var(--mid); max-width: 560px; line-height: 1.75; }
+    .section-head { margin-bottom: 56px; }
+    .section-head.center { text-align: center; }
+    .section-head.center .section-body { margin: 0 auto; }
+
+    /* ─── FEATURES ──────────────────────────────────────────────────────────── */
+    .features-bg { background: var(--white); }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+    }
+    .feature-card {
+      background: var(--surface); border: 1.5px solid var(--primary-border);
+      border-radius: 24px; padding: 28px 24px; position: relative; overflow: hidden;
+      transition: all .3s cubic-bezier(.4,0,.2,1);
+    }
+    .feature-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--gold));
+      transform: scaleX(0); transform-origin: left; transition: transform .35s;
+    }
+    .feature-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(106,75,195,.13); border-color: var(--primary-light); }
+    .feature-card:hover::before { transform: scaleX(1); }
+    .feature-icon {
+      width: 52px; height: 52px; border-radius: 14px; margin-bottom: 20px;
+      background: var(--primary-surface); display: flex; align-items: center; justify-content: center;
+    }
+    .feature-icon svg { width: 24px; height: 24px; color: var(--primary); }
+    .feature-title { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+    .feature-text { font-size: 0.875rem; color: var(--mid); line-height: 1.7; }
+
+    /* ─── LEARNING MODES ────────────────────────────────────────────────────── */
+    .modes-section { background: var(--surface); }
+    .modes-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .mode-card {
+      border-radius: 24px; overflow: hidden;
+      border: 1.5px solid var(--primary-border); background: var(--white);
+      transition: all .3s; cursor: pointer;
+    }
+    .mode-card:hover { transform: translateY(-5px); box-shadow: 0 20px 48px rgba(106,75,195,.12); }
+    .mode-card-top {
+      height: 160px; position: relative;
+      display: flex; align-items: center; justify-content: flex-start; padding: 24px;
+      overflow: hidden;
+    }
+    .mode-card-top .blob {
+      position: absolute; right: -40px; top: -40px; width: 200px; height: 200px;
+      border-radius: 50%; background: rgba(255,255,255,.07);
+    }
+    .mode-card-top .blob2 {
+      position: absolute; right: 20px; bottom: -50px; width: 140px; height: 140px;
+      border-radius: 50%; background: rgba(255,255,255,.05);
+    }
+    .mode-icon-wrap {
+      width: 56px; height: 56px; border-radius: 16px;
+      background: rgba(255,255,255,.18); border: 1.5px solid rgba(255,255,255,.22);
+      display: flex; align-items: center; justify-content: center; margin-right: 16px;
+      flex-shrink: 0; position: relative; z-index: 1;
+    }
+    .mode-icon-wrap svg { width: 26px; height: 26px; color: var(--white); }
+    .mode-card-head { position: relative; z-index: 1; }
+    .mode-card-name { font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--white); }
+    .mode-badge {
+      display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      background: rgba(255,255,255,.2); color: var(--white); border-radius: 50px;
+      padding: 3px 10px; margin-top: 4px; border: 1px solid rgba(255,255,255,.18);
+    }
+    .mode-card-body { padding: 20px 24px; }
+    .mode-desc { font-size: 0.9rem; color: var(--mid); line-height: 1.65; margin-bottom: 14px; }
+    .mode-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tag {
+      font-size: 0.76rem; font-weight: 600; padding: 4px 12px; border-radius: 50px;
+      background: var(--primary-surface); color: var(--primary); border: 1px solid var(--primary-border);
+    }
+
+    /* color variants */
+    .mode-card .mode-card-top { background-image: url(/images/bg3.png); }
+    .mode-card.kreatif .mode-card-top { background: linear-gradient(135deg, #BA7517 0%, #E6A800 100%); }
+    .mode-card.motorik  .mode-card-top { background: linear-gradient(135deg, #C2185B 0%, #F72585 100%); }
+    .mode-card.bahasa   .mode-card-top { background: linear-gradient(135deg, #00796B 0%, #26A69A 100%); }
+
+    .modes-grid .mode-card:first-child .mode-card-top {
+    background-image: url('images/bg3.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;   
+    }
+
+    .mode-card.kreatif .mode-card-top {
+    background-image: url('images/bg2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    }
+
+     .mode-card.motorik .mode-card-top {
+    background-image: url('images/bg5.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    }
+
+       .mode-card.bahasa .mode-card-top {
+    background-image: url('images/bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    }
+
+    /* ─── TEAM — INOVASI ────────────────────────────────────────────────────── */
+    .team-section { background: var(--white); }
+    .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .team-card {
+      border-radius: 24px; overflow: hidden;
+      border: 1.5px solid var(--primary-border); background: var(--surface);
+      transition: all .3s;
+    }
+    .team-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(106,75,195,.12); border-color: var(--primary-light); }
+    .team-card-banner {
+      height: 100px; position: relative;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 60%, var(--primary-light) 100%);
+      overflow: hidden;
+    }
+    .team-card-banner .pattern {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .team-avatar {
+      position: absolute; bottom: -32px; left: 24px;
+      width: 72px; height: 72px; border-radius: 20px;
+      border: 3px solid var(--white); overflow: hidden;
+      background: var(--primary-surface);
+      box-shadow: 0 8px 24px rgba(106,75,195,.2);
+    }
+    .team-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .team-avatar-fallback {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--primary), var(--primary-mid));
+      font-family: 'Sora', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--white);
+    }
+    .team-card-body { padding: 44px 24px 24px; }
+    .team-role {
+      display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      background: var(--primary-surface); color: var(--primary);
+      border: 1px solid var(--primary-border); padding: 3px 10px; border-radius: 50px; margin-bottom: 10px;
+    }
+    .team-name { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+    .team-bio { font-size: 0.855rem; color: var(--mid); line-height: 1.65; }
+
+    /* Founder cards — larger */
+    .founders-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; margin-bottom: 80px; }
+    .founder-card {
+      border-radius: 28px; overflow: hidden;
+      border: 2px solid var(--primary-light); background: var(--white);
+      transition: all .3s;
+    }
+    .founder-card:hover { transform: translateY(-8px); box-shadow: 0 28px 60px rgba(106,75,195,.14); }
+    .founder-banner {
+      height: 180px; position: relative;
+      background: linear-gradient(135deg, #4A2FCC 0%, var(--primary) 50%, var(--primary-mid) 100%);
+      overflow: hidden;
+    }
+    .founder-banner .pattern {
+      position: absolute; inset: 0;
+      background-image: url(images/bg-avatar.png);
+      background-size: cover;
+      background-position: center;
+    }
+    .founder-banner .gold-accent {
+      position: absolute; right: -30px; top: -30px;
+      width: 160px; height: 160px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,201,77,.25), transparent 70%);
+    }
+    .founder-avatar {
+      position: absolute; bottom: 40px; left: 28px;
+      width: 90px; height: 90px; border-radius: 22px;
+      border: 4px solid var(--white); overflow: hidden;
+      box-shadow: 0 10px 32px rgba(106,75,195,.25);
+    }
+    .founder-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .founder-avatar-fallback {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #4A2FCC, var(--primary));
+      font-family: 'Sora', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--white);
+    }
+    .founder-body { padding: 52px 28px 28px; }
+    .founder-role {
+      display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      background: var(--gold-light); color: var(--dark);
+      border: 1.5px solid var(--gold); padding: 4px 12px; border-radius: 50px; margin-bottom: 10px;
+    }
+    .founder-name { font-family: 'Sora', sans-serif; font-size: 1.2rem; font-weight: 800; color: var(--dark); margin-bottom: 10px; }
+    .founder-bio { font-size: 0.9rem; color: var(--mid); line-height: 1.7; }
+
+    /* ─── GMT / ABOUT ───────────────────────────────────────────────────────── */
+    .about-section { background: var(--surface); }
+    .gmt-steps {
+      display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px;
+      margin-top: 48px;
+    }
+    .gmt-step {
+      background: var(--white); border: 1.5px solid var(--primary-border);
+      border-radius: 20px; padding: 22px 16px; text-align: center; position: relative;
+      transition: all .25s;
+    }
+    .gmt-step:hover { border-color: var(--primary-light); box-shadow: var(--card-shadow); transform: translateY(-4px); }
+    .gmt-num {
+      width: 36px; height: 36px; background: var(--primary); color: var(--white);
+      border-radius: 10px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center;
+      font-family: 'Sora', sans-serif; font-size: 0.9rem; font-weight: 800;
+    }
+    .gmt-name { font-family: 'Sora', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+    .gmt-desc { font-size: 0.78rem; color: var(--mid); line-height: 1.6; }
+
+    /* connector arrow between steps */
+    .gmt-step:not(:last-child)::after {
+      content: '';
+      position: absolute; right: -8px; top: 50%; transform: translateY(-50%);
+      width: 14px; height: 2px; background: var(--primary-light);
+    }
+
+    /* ─── VIDEO / MEDIA ─────────────────────────────────────────────────────── */
+    .media-section { background: var(--white); }
+    .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .media-card {
+      border-radius: 24px; overflow: hidden; background: var(--surface);
+      border: 1.5px solid var(--primary-border); transition: all .3s;
+    }
+    .media-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(106,75,195,.12); }
+    .media-thumb {
+      height: 190px; overflow: hidden; position: relative;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 100%);
+    }
+    .media-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .media-card:hover .media-thumb img { transform: scale(1.05); }
+    .media-play {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      background: rgba(30,30,47,.28); opacity: 0; transition: opacity .3s;
+    }
+    .media-card:hover .media-play { opacity: 1; }
+    .play-circle {
+      width: 52px; height: 52px; border-radius: 50%; background: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,.2);
+    }
+    .play-circle svg { width: 20px; height: 20px; color: var(--primary); margin-left: 3px; }
+    .media-body { padding: 20px; }
+    .media-title { font-family: 'Sora', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--dark); margin-bottom: 7px; }
+    .media-text { font-size: 0.845rem; color: var(--mid); line-height: 1.6; margin-bottom: 14px; }
+    .media-link {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 0.845rem; font-weight: 700;
+      color: var(--primary); text-decoration: none; transition: gap .2s;
+    }
+    .media-link:hover { gap: 10px; }
+    .media-link svg { width: 14px; height: 14px; }
+
+    /* ─── DOWNLOAD ──────────────────────────────────────────────────────────── */
+    .download-section { background: var(--surface); }
+    .download-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start;
+    }
+    .steps-list { display: flex; flex-direction: column; gap: 0; }
+    .step-item {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 16px 0; border-bottom: 1px solid var(--primary-border);
+    }
+    .step-item:last-child { border-bottom: none; }
+    .step-circle {
+      width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px;
+      background: var(--primary); color: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Sora', sans-serif; font-size: 0.9rem; font-weight: 800;
+    }
+    .step-content h4 { font-size: 0.92rem; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+    .step-content p { font-size: 0.84rem; color: var(--mid); line-height: 1.6; }
+
+    .download-card {
+      background: var(--white); border: 2px solid var(--primary-border); border-radius: 28px; padding: 32px; position: sticky; top: 100px;
+    }
+    .download-card-header { margin-bottom: 24px; }
+    .download-card h3 { font-family: 'Sora', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+    .download-card p { font-size: 0.875rem; color: var(--mid); }
+    .download-main-btn {
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(135deg, var(--primary), var(--primary-mid));
+      color: var(--white); text-decoration: none; padding: 16px 20px; border-radius: 18px;
+      margin-bottom: 16px; box-shadow: 0 8px 32px rgba(106,75,195,.3); transition: all .25s;
+    }
+    .download-main-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(106,75,195,.38); }
+    .dmb-left { display: flex; align-items: center; gap: 12px; }
+    .dmb-icon { width: 44px; height: 44px; background: rgba(255,255,255,.18); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+    .dmb-icon svg { width: 22px; height: 22px; color: var(--white); }
+    .dmb-text .title { font-weight: 700; font-size: 0.95rem; }
+    .dmb-text .sub { font-size: 0.78rem; opacity: .75; margin-top: 1px; }
+    .dmb-arrow svg { width: 18px; height: 18px; }
+    .info-card {
+      border-radius: 16px; padding: 16px; margin-bottom: 12px;
+    }
+    .info-card.warning { background: #FFF8E1; border: 1.5px solid #FFD54F; }
+    .info-card.tip { background: var(--primary-surface); border: 1.5px solid var(--primary-border); }
+    .info-card h4 { font-size: 0.82rem; font-weight: 700; margin-bottom: 7px; }
+    .info-card.warning h4 { color: #E65100; }
+    .info-card.tip h4 { color: var(--primary); }
+    .info-card ul { padding-left: 16px; }
+    .info-card li { font-size: 0.8rem; color: var(--mid); margin-bottom: 4px; line-height: 1.55; }
+
+    /* ─── FOOTER ─────────────────────────────────────────────────────────────── */
+    footer {
+      background: var(--dark);
+      padding: 56px 0 32px;
+    }
+    .footer-inner {
+      display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 48px; margin-bottom: 48px;
+    }
+    .footer-brand .logo-mark .cul { color: var(--primary-light); }
+    .footer-brand .logo-mark .task { background: var(--gold); }
+    .footer-tagline { font-size: 0.875rem; color: rgba(255,255,255,.5); margin-top: 12px; max-width: 260px; line-height: 1.7; }
+    .footer-col h4 { font-family: 'Sora', sans-serif; font-size: 0.82rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: 16px; }
+    .footer-col a { display: block; font-size: 0.88rem; color: rgba(255,255,255,.65); text-decoration: none; margin-bottom: 10px; transition: color .2s; }
+    .footer-col a:hover { color: var(--primary-light); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.08); padding-top: 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-copy { font-size: 0.82rem; color: rgba(255,255,255,.38); }
+    .footer-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 0.78rem; font-weight: 700; color: var(--gold);
+      background: rgba(255,201,77,.1); border: 1px solid rgba(255,201,77,.25);
+      padding: 5px 12px; border-radius: 50px;
+    }
+    .footer-badge .dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; }
+
+    /* ─── ANIMATIONS ─────────────────────────────────────────────────────────── */
+    .fade-up {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-d1 { transition-delay: .1s; }
+    .fade-up-d2 { transition-delay: .2s; }
+    .fade-up-d3 { transition-delay: .3s; }
+    .fade-up-d4 { transition-delay: .4s; }
+
+    /* ─── DIVIDER ─────────────────────────────────────────────────────────────── */
+    .divider { height: 1px; background: var(--primary-border); }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .gmt-steps { grid-template-columns: repeat(3, 1fr); }
+      .gmt-step::after { display: none; }
+      .hero-inner { gap: 40px; }
+    }
+
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+      .founders-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+      .modes-grid { grid-template-columns: 1fr; }
+      .download-inner { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr; gap: 28px; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+      .nav-mobile { display: flex; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat-item:nth-child(2) { border-right: none; }
+      .stat-item:nth-child(3) { border-top: 1px solid var(--primary-border); }
+      .media-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: 1fr; }
+      .gmt-steps { grid-template-columns: repeat(2, 1fr); }
+      section { padding: 64px 0; }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .features-grid { grid-template-columns: 1fr; }
+      .gmt-steps { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ─── HEADER ───────────────────────────────────────────────────────────── -->
+<header id="main-header">
+  <div class="container">
+    <div class="nav-inner">
+      <a class="logo" href="#beranda">
+        <div class="logo-mark">
+         <img src="images/logo.png" style="width: 50px;" alt="">
+          <span class="cul">CUL</span><span class="task">TASK</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#beranda" class="active">Beranda</a>
+        <a href="#fitur">Fitur</a>
+        <a href="#tim">Tim Inovasi</a>
+        <a href="#tentang">Tentang</a>
+        <a href="#media">Media</a>
+        <a href="#download" class="nav-cta">Download APK</a>
+      </nav>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="nav-mobile" id="navMobile">
+  <a href="#beranda">Beranda</a>
+  <a href="#fitur">Fitur</a>
+  <a href="#tim">Tim Inovasi</a>
+  <a href="#tentang">Tentang</a>
+  <a href="#media">Media</a>
+  <a href="#download" class="cta-mob">Download APK</a>
+</nav>
+<div class="nav-overlay" id="navOverlay"></div>
+
+
+<!-- ─── HERO ─────────────────────────────────────────────────────────────── -->
+<section id="beranda" class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-blob"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="hero-label fade-up">
+          <span class="dot"></span>
+          Badung Festival Inovasi 2026
+        </div>
+        <h1 class="hero-headline fade-up fade-up-d1">
+          Belajar Langkah,<br>Capai <span class="accent">Tujuan</span>,<br>Siap Bekerja
+        </h1>
+        <p class="hero-body fade-up fade-up-d2">
+          Aplikasi mobile pelatihan kemampuan eksekusi tugas berbasis Goal Management Training dan budaya lokal Bali yang dirancang khusus untuk penyandang disabilitas intelektual ringan agar lebih mandiri dan siap bekerja.
+        </p>
+        <div class="hero-actions fade-up fade-up-d3">
+          <a href="#download" class="btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Aplikasi
+          </a>
+          <a href="#tentang" class="btn-outline">
+            Pelajari Selengkapnya
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div style="position:relative;">
+            <img src="images/hp.png" alt="">
+          </div>
+          <div class="phone-badge">GMT Method</div>
+          <div class="phone-badge-2"><div class="pb-dot"></div>AI Asisten Aktif</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── STATS ─────────────────────────────────────────────────────────────── -->
+<div class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item fade-up">
+        <div class="stat-num">6</div>
+        <div class="stat-label">Langkah GMT</div>
+      </div>
+      <div class="stat-item fade-up fade-up-d1">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Mode Belajar</div>
+      </div>
+      <div class="stat-item fade-up fade-up-d2">
+        <div class="stat-num">5+</div>
+        <div class="stat-label">Aktivitas Budaya Bali</div>
+      </div>
+      <div class="stat-item fade-up fade-up-d3">
+        <div class="stat-num">AI</div>
+        <div class="stat-label">Panduan Suara Cerdas</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ─── FEATURES ─────────────────────────────────────────────────────────── -->
+<section id="fitur" class="features-bg">
+  <div class="container">
+    <div class="section-head center">
+      <div class="section-label fade-up">Fitur Utama</div>
+      <h2 class="section-title fade-up fade-up-d1">Empat Pilar Keunggulan CULTASK</h2>
+      <p class="section-body fade-up fade-up-d2">Dirancang berdasarkan evidence-based methodology dan konteks budaya lokal Bali untuk hasil pembelajaran yang efektif dan inklusif.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card fade-up">
+        <div class="feature-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <h3 class="feature-title">GMT Cognitive Workflow</h3>
+        <p class="feature-text">Sistem pelatihan berbasis Goal Management Training dengan 6 tahap terstruktur: Stop, Define, List, Learn, Execute, Check untuk melatih fungsi eksekutif secara sistematis.</p>
+      </div>
+      <div class="feature-card fade-up fade-up-d1">
+        <div class="feature-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <h3 class="feature-title">Cultural-Based Learning</h3>
+        <p class="feature-text">Aktivitas berbasis kebudayaan lokal Bali seperti membuat canang sari, aktivitas pasar tradisional, dan kegiatan banjar untuk meningkatkan engagement dan relevansi pembelajaran.</p>
+      </div>
+      <div class="feature-card fade-up fade-up-d2">
+        <div class="feature-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+        </div>
+        <h3 class="feature-title">Panduan Suara AI</h3>
+        <p class="feature-text">AI Asisten dengan TTS Bahasa Indonesia membacakan setiap instruksi langkah. Tombol "Butuh Bantuan?" memberikan penjelasan ulang yang lebih sederhana saat dibutuhkan.</p>
+      </div>
+      <div class="feature-card fade-up fade-up-d3">
+        <div class="feature-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+        </div>
+        <h3 class="feature-title">Progress Analytics</h3>
+        <p class="feature-text">Dashboard monitoring perkembangan pengguna dengan grafik mingguan, sistem poin dan badge, serta laporan PDF yang dapat dikirim ke terapis atau orang tua.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── LEARNING MODES ────────────────────────────────────────────────────── -->
+<section class="modes-section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label fade-up">Mode Belajar</div>
+      <h2 class="section-title fade-up fade-up-d1">Empat Cara Seru Belajar Budaya Bali</h2>
+      <p class="section-body fade-up fade-up-d2">Setiap mode dirancang untuk melatih kemampuan yang berbeda, dari fokus kognitif hingga koordinasi motorik dan kemampuan berbicara.</p>
+    </div>
+    <div class="modes-grid">
+
+      <div class="mode-card fade-up">
+        <div class="mode-card-top">
+          <div class="blob"></div><div class="blob2"></div>
+          <div class="mode-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <div class="mode-card-head">
+            <div class="mode-card-name">Fokus &amp; Memori</div>
+            <div class="mode-badge">GMT Method</div>
+          </div>
+        </div>
+        <div class="mode-card-body">
+          <p class="mode-desc">Latih konsentrasi dan daya ingat melalui pendekatan Goal Management Training step-by-step yang terstruktur dengan visual, audio, dan contextual cues.</p>
+          <div class="mode-tags">
+            <span class="tag">Task Sequencing</span>
+            <span class="tag">Working Memory</span>
+            <span class="tag">Goal Management</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mode-card kreatif fade-up fade-up-d1">
+        <div class="mode-card-top">
+          <div class="blob"></div><div class="blob2"></div>
+          <div class="mode-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+          </div>
+          <div class="mode-card-head">
+            <div class="mode-card-name">Kreativitas &amp; Sensori</div>
+            <div class="mode-badge">Visual</div>
+          </div>
+        </div>
+        <div class="mode-card-body">
+          <p class="mode-desc">Stimulasi visual dan kreativitas melalui pengenalan aksara Bali, menebalkan gambar motif, dan drag &amp; drop warna pada ornamen tradisional.</p>
+          <div class="mode-tags">
+            <span class="tag">Aksara Bali</span>
+            <span class="tag">Trace Path</span>
+            <span class="tag">Drag &amp; Drop</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mode-card motorik fade-up fade-up-d2">
+        <div class="mode-card-top">
+          <div class="blob"></div><div class="blob2"></div>
+          <div class="mode-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><path d="M6.5 8H17.5"/><path d="M9 21l3-7.5L15 21"/><path d="M6.5 8l-1.5 6"/><path d="M17.5 8l1.5 6"/></svg>
+          </div>
+          <div class="mode-card-head">
+            <div class="mode-card-name">Motorik &amp; Emosi</div>
+            <div class="mode-badge">Tiru Gerak</div>
+          </div>
+        </div>
+        <div class="mode-card-body">
+          <p class="mode-desc">Latihan gerak tubuh dan keseimbangan emosi melalui split-screen kamera dengan panduan gerakan tari Bali, yoga, dan latihan napas relaksasi.</p>
+          <div class="mode-tags">
+            <span class="tag">Tari Bali</span>
+            <span class="tag">Yoga</span>
+            <span class="tag">Napas 4-4-6</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mode-card bahasa fade-up fade-up-d3">
+        <div class="mode-card-top">
+          <div class="blob"></div><div class="blob2"></div>
+          <div class="mode-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </div>
+          <div class="mode-card-head">
+            <div class="mode-card-name">Bahasa &amp; Komunikasi</div>
+            <div class="mode-badge">Video + Lagu</div>
+          </div>
+        </div>
+        <div class="mode-card-body">
+          <p class="mode-desc">Terapi speech delay melalui video interaktif lagu tradisional Bali dengan lirik tersinkronisasi per kata dan mode ucapkan untuk latihan berbicara.</p>
+          <div class="mode-tags">
+            <span class="tag">Lagu Tradisional</span>
+            <span class="tag">Lirik Synced</span>
+            <span class="tag">Speech Therapy</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── TENTANG / GMT ─────────────────────────────────────────────────────── -->
+<section id="tentang" class="about-section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label fade-up">Metode GMT</div>
+      <h2 class="section-title fade-up fade-up-d1">Pendekatan Goal Management Training</h2>
+      <p class="section-body fade-up fade-up-d2">GMT adalah pendekatan berbasis neurosains kognitif yang terbukti efektif melatih fungsi eksekutif pada individu dengan disabilitas intelektual. CULTASK mengadaptasi 6 tahap GMT menjadi pengalaman digital yang interaktif.</p>
+    </div>
+
+    <div class="gmt-steps">
+      <div class="gmt-step fade-up">
+        <div class="gmt-num">1</div>
+        <div class="gmt-name">STOP</div>
+        <p class="gmt-desc">Orientasi dan fokus sebelum aktivitas. Pengguna belajar berhenti dan menenangkan diri.</p>
+      </div>
+      <div class="gmt-step fade-up fade-up-d1">
+        <div class="gmt-num">2</div>
+        <div class="gmt-name">DEFINE</div>
+        <p class="gmt-desc">Penentuan tujuan aktivitas yang spesifik. Memilih satu goal yang akan dilatih.</p>
+      </div>
+      <div class="gmt-step fade-up fade-up-d2">
+        <div class="gmt-num">3</div>
+        <div class="gmt-name">LIST</div>
+        <p class="gmt-desc">Sistem memecah tugas besar menjadi langkah-langkah kecil yang mudah diikuti.</p>
+      </div>
+      <div class="gmt-step fade-up fade-up-d3">
+        <div class="gmt-num">4</div>
+        <div class="gmt-name">LEARN</div>
+        <p class="gmt-desc">Pengguna mempelajari dan mengingat setiap langkah dengan visual dan audio guidance.</p>
+      </div>
+      <div class="gmt-step fade-up" style="transition-delay:.4s">
+        <div class="gmt-num">5</div>
+        <div class="gmt-name">EXECUTE</div>
+        <p class="gmt-desc">Menjalankan task dengan tampilan contextual step view dan reminder audio real-time.</p>
+      </div>
+      <div class="gmt-step fade-up" style="transition-delay:.5s">
+        <div class="gmt-num">6</div>
+        <div class="gmt-name">CHECK</div>
+        <p class="gmt-desc">Evaluasi hasil latihan — skor, akurasi waktu, feedback AI, dan pemberian reward.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── TIM INOVASI ─────────────────────────────────────────────────────── -->
+<section id="tim" class="team-section">
+  <div class="container">
+    <div class="section-head center">
+      <div class="section-label fade-up">Tim Inovasi</div>
+      <h2 class="section-title fade-up fade-up-d1">Orang-Orang di Balik CULTASK</h2>
+      <p class="section-body fade-up fade-up-d2">Perpaduan antara ilmu kesehatan, teknologi, dan kecintaan pada budaya Bali menjadi satu untuk menciptakan solusi inklusif yang bermakna.</p>
+    </div>
+
+    <!-- Founders -->
+    <div class="founders-grid">
+      <div class="founder-card fade-up">
+        <div class="founder-banner">
+          <div class="pattern"></div>
+          <div class="gold-accent"></div>
+          <div class="founder-avatar">
+            <img src="images/thio.jpg" alt="Founder 1"
+              onerror="this.parentElement.innerHTML='<div class=\'founder-avatar-fallback\'>A</div>'">
+          </div>
+        </div>
+        <div class="founder-body">
+          <div class="founder-role">INOVATOR</div>
+          <div class="founder-name">I PUTU THIO MAHAPRADANA</div>
+          <p class="founder-bio">Mahasiswa yang menggagas CULTASK sebagai solusi terapi berbasis teknologi dan budaya Bali untuk penyandang disabilitas intelektual. Berfokus pada riset dan pendekatan klinis.</p>
+        </div>
+      </div>
+      <div class="founder-card fade-up fade-up-d1">
+        <div class="founder-banner">
+          <div class="pattern"></div>
+          <div class="gold-accent"></div>
+          <div class="founder-avatar">
+            <img src="images/dedik.jpg" alt="Founder 2"
+              onerror="this.parentElement.innerHTML='<div class=\'founder-avatar-fallback\'>B</div>'">
+          </div>
+        </div>
+        <div class="founder-body">
+          <div class="founder-role">INOVATOR</div>
+          <div class="founder-name">KADEK ADIKA ANANDA ARYANA</div>
+          <p class="founder-bio">Mahasiswa Informatika yang bertanggung jawab merancang dan membangun platform digital CULTASK. Menghubungkan pendekatan GMT dengan implementasi Flutter yang ramah disabilitas.</p>
+        </div>
+      </div>
+    </div>
+
+</section>
+
+
+<!-- ─── MEDIA ─────────────────────────────────────────────────────────────── -->
+<section id="media" class="media-section">
+  <div class="container">
+    <div class="section-head center">
+      <div class="section-label fade-up">Video &amp; Media</div>
+      <h2 class="section-title fade-up fade-up-d1">Mengenal CULTASK Lebih Dekat</h2>
+      <p class="section-body fade-up fade-up-d2">Saksikan bagaimana CULTASK bekerja dan memberikan dampak nyata bagi penyandang disabilitas intelektual di Bali.</p>
+    </div>
+    <div class="media-grid">
+      <div class="media-card fade-up">
+        <div class="media-thumb">
+          <img src="images/9.png" alt="Pengenalan Aplikasi">
+          <div class="media-play">
+            <div class="play-circle">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="media-body">
+          <div class="media-title">Pengenalan Aplikasi CULTASK</div>
+          <p class="media-text">Gambaran lengkap fitur-fitur utama CULTASK dan bagaimana pendekatan GMT diimplementasikan dalam aplikasi mobile.</p>
+          <a href="https://drive.google.com/drive/folders/15r6xaJAcq42D69yYAeLootkdM6srupNf?usp=drive_link" class="media-link" target="_blank">
+            Tonton Video
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="media-card fade-up fade-up-d1">
+        <div class="media-thumb">
+          <img src="images/10.png" alt="Demo Fitur">
+          <div class="media-play">
+            <div class="play-circle">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="media-body">
+          <div class="media-title">Demonstrasi Fitur Lengkap</div>
+          <p class="media-text">Penjelasan mendalam tentang alur GMT 6 langkah, AI Asisten, mode belajar, dan sistem progress analytics CULTASK.</p>
+          <a href="https://drive.google.com/drive/folders/1Hr0YB2I_TjaQS5-BDMI7fW3e_rrfI8im?usp=drive_link" class="media-link" target="_blank">
+            Tonton Video
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="media-card fade-up fade-up-d2">
+        <div class="media-thumb">
+          <img src="images/11.png" alt="Media Sosial">
+          <div class="media-play">
+            <div class="play-circle">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="media-body">
+          <div class="media-title">Media Sosial CULTASK</div>
+          <p class="media-text">Ikuti perjalanan CULTASK dan dapatkan konten edukasi tentang terapi disabilitas berbasis kearifan lokal Bali yang inspiratif setiap hari.</p>
+          <a href="https://www.instagram.com/cultask/" class="media-link" target="_blank">
+            Kunjungi Halaman
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── DOWNLOAD ──────────────────────────────────────────────────────────── -->
+<section id="download" class="download-section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label fade-up">Download</div>
+      <h2 class="section-title fade-up fade-up-d1">Mulai Perjalanan Belajar Sekarang</h2>
+      <p class="section-body fade-up fade-up-d2">Ikuti langkah-langkah berikut untuk mengunduh dan menginstal CULTASK di perangkat Android kamu.</p>
+    </div>
+    <div class="download-inner">
+      <div class="steps-list fade-up">
+        <div class="step-item">
+          <div class="step-circle">1</div>
+          <div class="step-content">
+            <h4>Klik Tombol Download</h4>
+            <p>Tekan tombol download di sebelah kanan untuk mengakses file APK di Google Drive.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-circle">2</div>
+          <div class="step-content">
+            <h4>Buka Google Drive</h4>
+            <p>Link akan membawa kamu ke halaman Google Drive tempat file APK tersimpan dengan aman.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-circle">3</div>
+          <div class="step-content">
+            <h4>Pilih dan Unduh File APK</h4>
+            <p>Temukan file APK CULTASK di folder, klik ikon download untuk mengunduhnya ke perangkat.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-circle">4</div>
+          <div class="step-content">
+            <h4>Izinkan Sumber Tidak Dikenal</h4>
+            <p>Di Pengaturan Android, aktifkan "Izinkan instalasi dari sumber tidak dikenal" untuk file ini.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-circle">5</div>
+          <div class="step-content">
+            <h4>Install dan Mulai Belajar</h4>
+            <p>Buka file APK yang diunduh, ikuti proses instalasi, dan mulailah perjalanan belajar bersama CULTASK.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="download-card fade-up fade-up-d1">
+        <div class="download-card-header">
+          <h3>Download CULTASK</h3>
+          <p>Tersedia untuk Android. Gratis untuk digunakan.</p>
+        </div>
+        <a href="https://drive.google.com/drive/folders/1qw_3PIBf3-cBqjakpnZK_0WlvvHp4NGP?usp=drive_link" class="download-main-btn" target="_blank">
+            <div class="dmb-left">
+
+                <div class="dmb-icon">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                </div>
+
+                <div class="dmb-text">
+                <div class="title">Download APK</div>
+                <div class="sub">via Google Drive</div>
+                </div>
+
+            </div>
+
+            <div class="dmb-arrow">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+                </svg>
+            </div>
+            </a>
+        <div class="info-card warning">
+          <h4>Perhatian Sebelum Instalasi</h4>
+          <ul>
+            <li>Pastikan perangkat Android mengizinkan instalasi sumber tidak dikenal</li>
+            <li>Koneksi internet diperlukan untuk fitur AI Asisten</li>
+            <li>Ruang penyimpanan minimal 100 MB diperlukan</li>
+            <li>Kompatibel dengan Android 8.0 ke atas</li>
+          </ul>
+        </div>
+        <div class="info-card tip">
+          <h4>Tips Penggunaan Optimal</h4>
+          <ul>
+            <li>Gunakan headphone untuk pengalaman panduan suara terbaik</li>
+            <li>Mulai dari kategori Keseharian sebelum ke Kebudayaan</li>
+            <li>Aktifkan notifikasi untuk pengingat latihan harian</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── FOOTER ────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="logo-mark" style="margin-bottom:12px;">
+         <img src="images/logo.png" style="width: 50px;" alt="">     
+          <span class="cul">CUL</span><span class="task">TASK</span>
+        </div>
+        <p class="footer-tagline">Aplikasi pelatihan kemampuan eksekusi tugas berbasis GMT dan budaya lokal Bali untuk penyandang disabilitas intelektual.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigasi</h4>
+        <a href="#beranda">Beranda</a>
+        <a href="#fitur">Fitur</a>
+        <a href="#tim">Tim Inovasi</a>
+        <a href="#tentang">Tentang GMT</a>
+        <a href="#media">Media</a>
+      </div>
+      <div class="footer-col">
+        <h4>Fitur</h4>
+        <a href="#">Fokus &amp; Memori</a>
+        <a href="#">Kreativitas &amp; Sensori</a>
+        <a href="#">Motorik &amp; Emosi</a>
+        <a href="#">Bahasa &amp; Komunikasi</a>
+        <a href="#">AI Asisten</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">2026 CULTASK. Dikembangkan untuk inklusivitas dan kemandirian.</p>
+      <div class="footer-badge">
+        <span class="dot"></span>
+        Badung Festival Inovasi 2026
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+// ─── NAV TOGGLE ────────────────────────────────────────────────────────────
+const toggle  = document.getElementById('navToggle');
+const mobile  = document.getElementById('navMobile');
+const overlay = document.getElementById('navOverlay');
+
+function openMenu() {
+  toggle.classList.add('open');
+  mobile.classList.add('open');
+  overlay.style.display = 'block';
+  requestAnimationFrame(() => overlay.classList.add('open'));
+  document.body.style.overflow = 'hidden';
+}
+function closeMenu() {
+  toggle.classList.remove('open');
+  mobile.classList.remove('open');
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => overlay.style.display = 'none', 300);
+}
+
+toggle.addEventListener('click', () => mobile.classList.contains('open') ? closeMenu() : openMenu());
+overlay.addEventListener('click', closeMenu);
+mobile.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+// ─── SCROLL EFFECTS ─────────────────────────────────────────────────────────
+const header = document.getElementById('main-header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// ─── ACTIVE NAV ─────────────────────────────────────────────────────────────
+const sectionIds = ['beranda','fitur','tim','tentang','media','download'];
+function updateActive() {
+  const y = window.scrollY + 100;
+  let current = 'beranda';
+  sectionIds.forEach(id => {
+    const el = id === 'beranda' ? document.querySelector('.hero') : document.getElementById(id);
+    if (el && y >= el.offsetTop) current = id;
+  });
+  document.querySelectorAll('.nav-links a, .nav-mobile a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === `#${current}`);
+  });
+}
+window.addEventListener('scroll', updateActive, { passive: true });
+
+// ─── SMOOTH SCROLL ──────────────────────────────────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const id = a.getAttribute('href').slice(1);
+    const el = id === 'beranda' ? document.querySelector('.hero') : document.getElementById(id);
+    if (el) window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+  });
+});
+
+// ─── FADE-IN OBSERVER ───────────────────────────────────────────────────────
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+// ─── PAGE LOAD ──────────────────────────────────────────────────────────────
+document.body.style.opacity = '0';
+window.addEventListener('load', () => {
+  document.body.style.transition = 'opacity .45s ease';
+  document.body.style.opacity = '1';
+});
+</script>
+</body>
+</html>
